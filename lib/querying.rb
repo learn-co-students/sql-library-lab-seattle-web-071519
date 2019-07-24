@@ -36,14 +36,17 @@ end
 def select_series_title_with_most_human_characters
   sql = <<-SQL
     SELECT series.title FROM series
-    JOIN books ON books.series_id = series.id
-    JOIN character_books ON character_books.book_id = books.id
-    JOIN characters ON character_books.character_id = characters.id
+    JOIN characters ON characters.series_id = series.id
     WHERE characters.species = "human"
     GROUP BY series.title
     ORDER BY COUNT(*) DESC LIMIT 1;
   SQL
 
+  #first grab titles of series, link up to the character table using series id, only looking at "humans" 
+  #group by title, should see a bunch of repeats of each title representing how many humans in each series
+  #now count all the entries (so 5 GOT would correspond to 5 human entries) - order and limit by 1 to get top entry
+
+  #below is way it seems like it should work other than including the count
   # sql = "SELECT series.title, COUNT(characters.species) FROM series JOIN characters ON series.id = characters.series_id WHERE characters.species = 'human';"
 end
 
